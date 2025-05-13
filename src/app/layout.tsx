@@ -1,4 +1,3 @@
-
 import Header from "./components/header/Header";
 import Topbar from "./components/Topbar";
 
@@ -10,10 +9,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Topbar/>
-        <Header/>
+        <Topbar />
+        <Header />
         {children}
-
       </body>
     </html>
   );
