@@ -1,26 +1,17 @@
-@import "tailwindcss";
+/* styles/globals.css */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  /* Canh giữa chữ màu vàng */
+  .center-yellow-text {
+    @apply flex justify-center items-center text-yellow-400;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Canh trái chữ màu xanh */
+  .left-blue-text {
+    @apply flex justify-start items-center text-blue-600;
+  }
 }
