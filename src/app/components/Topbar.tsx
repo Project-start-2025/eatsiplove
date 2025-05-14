@@ -1,4 +1,3 @@
-// components/Topbar.tsx
 const Topbar = () => {
   return (
     <div
@@ -7,7 +6,9 @@ const Topbar = () => {
         color: "#333",
         fontWeight: "600",
         textAlign: "center",
-        padding: "6px",
+        padding: "6px 0",
+        width: "100%",
+        boxSizing: "border-box",
       }}
     >
       MIỄN PHÍ VẬN CHUYỂN TRÊN MỌI ĐƠN HÀNG
