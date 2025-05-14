@@ -31,7 +31,7 @@ const Header = () => {
           Trang chủ
         </Link>
         <div style={{ position: "relative" }}>
-          <Link href="/san-pham" style={{ color: "white" }}>
+          <Link href="/prod" style={{ color: "white" }}>
             Sản phẩm ▼
           </Link>
         </div>
@@ -97,7 +97,7 @@ const Header = () => {
               >
                 Đăng nhập
               </Link>
-              <hr style={{ margin: "8px 0" }} />
+              <hr style={{ margin: "0" }} />
               <button
                 style={{
                   width: "100%",
