@@ -98,21 +98,21 @@ const Header = () => {
                 Đăng nhập
               </Link>
               <hr style={{ margin: "0" }} />
-              <button
+              <Link
+                href="/Register"
                 style={{
-                  width: "100%",
-                  background: "none",
-                  border: "none",
+                  display: "block",
                   padding: "8px 0",
-                  cursor: "pointer",
                   fontWeight: "600",
                   fontSize: "14px",
                   color: "#333",
+                  textDecoration: "none",
+                  textAlign: "left",
+                  cursor: "pointer",
                 }}
-                onClick={() => alert("Đăng ký")}
               >
                 Đăng ký
-              </button>
+              </Link>
             </div>
           )}
         </div>
