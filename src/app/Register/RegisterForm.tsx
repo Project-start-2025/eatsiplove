@@ -7,6 +7,7 @@ const RegisterForm = () => {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   // Có thể thêm role nếu cần, hoặc mặc định "user"
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -88,7 +89,19 @@ const RegisterForm = () => {
         disabled={loading}
       />
 
-      {/* Nếu muốn chọn role, bạn có thể thêm dropdown ở đây */}
+      <label htmlFor="role" style={styles.label}>
+        Vai trò
+      </label>
+      <select
+        id="role"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        style={styles.select}
+        disabled={loading}
+      >
+        <option value="customer">Khách hàng</option>
+        <option value="admin">Admin</option>
+      </select>
 
       <button type="submit" style={styles.button} disabled={loading}>
         {loading ? "Đang đăng ký..." : "Đăng ký"}
