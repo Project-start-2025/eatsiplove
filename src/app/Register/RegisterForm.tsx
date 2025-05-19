@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"
 
 const RegisterForm = () => {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const router = useRouter();
   // Có thể thêm role nếu cần, hoặc mặc định "user"
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ const RegisterForm = () => {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, username, password, role: "user" }),
+        body: JSON.stringify({ fullName, username, password, role}),
       });
 
       if (res.ok) {
@@ -29,6 +31,10 @@ const RegisterForm = () => {
         setFullName("");
         setUsername("");
         setPassword("");
+        setTimeout(()=>{
+          router.push("/Login");
+        },1500)
+
       } else if (res.status === 409) {
         setMessage("Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.");
       } else if (res.status === 400) {
@@ -100,6 +106,7 @@ const RegisterForm = () => {
         disabled={loading}
       >
         <option value="customer">Khách hàng</option>
+        <option value="vendor">Quản lý nhà hàng</option>
         <option value="admin">Admin</option>
       </select>
 
