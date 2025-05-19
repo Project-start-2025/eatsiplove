@@ -1,17 +1,3 @@
-/* styles/globals.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer components {
-  /* Canh giữa chữ màu vàng */
-  .center-yellow-text {
-    @apply flex justify-center items-center text-yellow-400;
-  }
-
-  /* Canh trái chữ màu xanh */
-  .left-blue-text {
-    @apply flex justify-start items-center text-blue-600;
-  }
-}
