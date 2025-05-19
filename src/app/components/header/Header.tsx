@@ -31,7 +31,7 @@ const Header = () => {
           Trang chủ
         </Link>
         <div style={{ position: "relative" }}>
-          <Link href="/prod" style={{ color: "white" }}>
+          <Link href="/products" style={{ color: "white" }}>
             Sản phẩm ▼
           </Link>
         </div>
@@ -43,6 +43,9 @@ const Header = () => {
         </Link>
         <Link href="/gioi-thieu" style={{ color: "white" }}>
           Giới thiệu
+        </Link>
+        <Link href="/" style={{ color: "white" }}>
+          Thêm sản phẩm
         </Link>
       </nav>
 
