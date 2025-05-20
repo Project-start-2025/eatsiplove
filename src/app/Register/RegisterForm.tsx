@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation"
+import styles from "@/styles/styles.LoginForm";
 
 const RegisterForm = () => {
   const [fullName, setFullName] = useState("");
@@ -134,51 +135,6 @@ const RegisterForm = () => {
       </p>
     </form>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 16,
-    width: "100%",
-    maxWidth: 400,
-    backgroundColor: "#fff",
-    padding: "40px 30px",
-    borderRadius: 12,
-    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-  },
-  title: {
-    marginBottom: 8,
-    color: "#5a381e",
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  label: {
-    fontWeight: 600,
-    fontSize: 14,
-    color: "#5a381e",
-  },
-  input: {
-    padding: "10px 12px",
-    fontSize: 16,
-    borderRadius: 8,
-    border: "1px solid #ccc",
-    outline: "none",
-  },
-  button: {
-    backgroundColor: "#F9C74F",
-    border: "none",
-    borderRadius: 25,
-    padding: 12,
-    fontWeight: "700",
-    fontSize: 16,
-    color: "#1c1c1c",
-    cursor: "pointer",
-    marginTop: 8,
-    transition: "background-color 0.3s",
-  },
 };
 
 export default RegisterForm;
