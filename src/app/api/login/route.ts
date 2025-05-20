@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sql from 'mssql';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs'; 
+import jwt from 'jsonwebtoken';
 
 const config: sql.config = {
   user: process.env.DB_USER!,
@@ -13,6 +14,8 @@ const config: sql.config = {
   },
 };
 
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
@@ -23,12 +26,13 @@ export async function POST(req: NextRequest) {
 
     const pool = await sql.connect(config);
 
-    const resUser = await pool.request()
-      .input('username', sql.NVarChar, email)
+    // Giả sử trường là Email
+      const resUser = await pool.request()
+      .input('username', sql.NVarChar, email)  // 'email' biến frontend gửi, thực tế là username
       .query('SELECT * FROM Accounts WHERE Username = @username');
 
-    if (resUser.recordset.length === 0) {
-      return NextResponse.json({ message: 'User not found' }, { status: 401 });
+      if (resUser.recordset.length === 0) {
+        return NextResponse.json({ message: 'User not found' }, { status: 401 });
     }
 
     const user = resUser.recordset[0];
@@ -37,13 +41,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Invalid password' }, { status: 401 });
     }
 
-    // Đăng nhập thành công, có thể tạo session/token ở đây
-
-    return NextResponse.json({ message: 'Login successful', user: {
+    const payload = {
       username: user.Username,
       fullname: user.FullName,
       role: user.Role,
-    }});
+    };
+
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+
+    return NextResponse.json({
+      message: 'Login successful',
+      token,
+      user: {
+        username: user.Username,
+        fullname: user.FullName,
+        role: user.Role,
+      },
+    });
   } catch(error) {
     console.error('Login API error:', error);
     return NextResponse.json({ message: 'Server error' }, { status: 500 });
