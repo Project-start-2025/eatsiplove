@@ -1,11 +1,15 @@
 "use client";
+import { useUser } from "@/app/Context/UserContext";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaUser, FaSearch, FaShoppingCart } from "react-icons/fa";
 
+
 const Header = () => {
   const [ShowDropDown, setShowDropDown] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
+  const { user, logout } = useUser();
+
   useEffect(() => {
     const handleClickOutSide = (event: MouseEvent) => {
       if (userRef.current && !userRef.current.contains(event.target as Node)) {
@@ -15,6 +19,7 @@ const Header = () => {
     document.addEventListener("mousedown", handleClickOutSide);
     return () => document.removeEventListener("mousedown", handleClickOutSide);
   }, []);
+
   return (
     <header
       style={{
@@ -26,7 +31,7 @@ const Header = () => {
         padding: "10px 30px",
       }}
     >
-      <nav style={{ display: "flex", gap: "20px", fontWeight: "600" }}>
+     <nav style={{ display: "flex", gap: "20px", fontWeight: "600" }}>
         <Link href="/" style={{ color: "#F9C74F" }}>
           Trang chủ
         </Link>
@@ -69,8 +74,12 @@ const Header = () => {
           HOTLINE: <span style={{ color: "#F9C74F" }}>1800 6750</span>
         </span>
 
-        <div ref={userRef} style={{ position: "relative", cursor: "pointer" }}>
-          <FaUser onClick={() => setShowDropDown(!ShowDropDown)} />
+        <div
+          ref={userRef}
+          style={{ position: "relative", cursor: "pointer" }}
+          onClick={() => setShowDropDown(!ShowDropDown)}
+        >
+          <FaUser />
           {ShowDropDown && (
             <div
               style={{
@@ -83,39 +92,93 @@ const Header = () => {
                 width: "150px",
                 zIndex: 100,
                 padding: "10px",
+                color: "#333",
               }}
             >
-              <Link
-                href="/Login"
-                style={{
-                  display: "block",
-                  padding: "8px 0",
-                  fontWeight: "600",
-                  fontSize: "14px",
-                  color: "#333",
-                  textDecoration: "none",
-                  textAlign: "left",
-                  cursor: "pointer",
-                }}
-              >
-                Đăng nhập
-              </Link>
-              <hr style={{ margin: "0" }} />
-              <Link
-                href="/Register"
-                style={{
-                  display: "block",
-                  padding: "8px 0",
-                  fontWeight: "600",
-                  fontSize: "14px",
-                  color: "#333",
-                  textDecoration: "none",
-                  textAlign: "left",
-                  cursor: "pointer",
-                }}
-              >
-                Đăng ký
-              </Link>
+              {!user ? (
+                <>
+                  <Link
+                    href="/Login"
+                    style={{
+                      display: "block",
+                      padding: "8px 0",
+                      fontWeight: "600",
+                      fontSize: "14px",
+                      color: "#333",
+                      textDecoration: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setShowDropDown(false)}
+                  >
+                    Đăng nhập
+                  </Link>
+                  <hr style={{ margin: "0" }} />
+                  <Link
+                    href="/Register"
+                    style={{
+                      display: "block",
+                      padding: "8px 0",
+                      fontWeight: "600",
+                      fontSize: "14px",
+                      color: "#333",
+                      textDecoration: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setShowDropDown(false)}
+                  >
+                    Đăng ký
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div
+                    style={{
+                      fontWeight: "700",
+                      paddingBottom: "8px",
+                      borderBottom: "1px solid #ccc",
+                    }}
+                  >
+                    Xin chào, {user.fullname}
+                  </div>
+                  <Link
+                    href="/profile"
+                    style={{
+                      display: "block",
+                      padding: "8px 0",
+                      fontWeight: "600",
+                      fontSize: "14px",
+                      color: "#333",
+                      textDecoration: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setShowDropDown(false)}
+                  >
+                    Thông tin cá nhân
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setShowDropDown(false);
+                    }}
+                    style={{
+                      marginTop: "8px",
+                      width: "100%",
+                      border: "none",
+                      backgroundColor: "#e63946",
+                      color: "white",
+                      fontWeight: "600",
+                      padding: "8px 0",
+                      cursor: "pointer",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    Đăng xuất
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
