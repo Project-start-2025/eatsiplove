@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sql from 'mssql';
 import bcrypt from 'bcrypt';
+import { Account } from '@/models/Account';
 
 const config: sql.config = {
   user: process.env.DB_USER!,
