@@ -23,9 +23,16 @@ export async function POST(req: NextRequest) {
 
     const pool = await sql.connect(config);
 
+<<<<<<< HEAD
     const resUser = await pool.request()
       .input('username', sql.NVarChar, email)
       .query('SELECT * FROM Accounts WHERE Username = @username');
+=======
+    // Giả sử trường là Email
+    const resUser = await pool.request()
+    .input('username', sql.NVarChar, email)  // 'email' biến frontend gửi, thực tế là username
+    .query('SELECT * FROM Accounts WHERE Username = @username');
+>>>>>>> b174dbc (Send restaurant request from vendor to admin)
 
     if (resUser.recordset.length === 0) {
       return NextResponse.json({ message: 'User not found' }, { status: 401 });

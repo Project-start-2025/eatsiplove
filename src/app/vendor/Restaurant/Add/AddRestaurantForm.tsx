@@ -25,8 +25,7 @@ export default function AddRestaurantForm(){
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        const res = await fetch('/api/restaurant', {
+        const res = await fetch('/api/admin/restaurant/restaurant_req', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -48,8 +47,8 @@ export default function AddRestaurantForm(){
                 <input name="name" placeholder="Tên cửa hàng" onChange={handleChange} required className="w-full p-2 border rounded" />
                 <input name="address" placeholder="Địa chỉ" onChange={handleChange} required className="w-full p-2 border rounded" />
                 <input name="phone" placeholder="Số điện thoại" onChange={handleChange} required className="w-full p-2 border rounded" />
-                <input name="openTime" placeholder="Giờ mở cửa (hh:mm)" onChange={handleChange} required className="w-full p-2 border rounded" />
-                <input name="closeTime" placeholder="Giờ đóng cửa (hh:mm)" onChange={handleChange} required className="w-full p-2 border rounded" />
+                <input name="openTime" placeholder="Giờ mở cửa (hh:mm)" onChange={handleChange} required className="w-full p-2 border rounded" /*type="time"*/ />
+                <input name="closeTime" placeholder="Giờ đóng cửa (hh:mm)" onChange={handleChange} required className="w-full p-2 border rounded" /*type="time"*//>
                 <label className="flex items-center gap-2">
                 <input type="checkbox" name="restaurantStatus" checked={formData.restaurantStatus} onChange={handleChange} />
                 Đang hoạt động
