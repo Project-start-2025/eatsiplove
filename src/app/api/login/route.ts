@@ -29,19 +29,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Invalid password' }, { status: 401 });
     }
 
-    // Payload JWT
     const payload = {
+      id: user.id, // <-- thêm dòng này!
       username: user.username,
       fullname: user.fullName,
       role: user.role,
     };
-
+    
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
-
+    
     return NextResponse.json({
       message: 'Login successful',
       token,
       user: {
+        id: user.id,         // <-- Bắt buộc PHẢI trả về trường id này!
         username: user.username,
         fullname: user.fullName,
         role: user.role,
