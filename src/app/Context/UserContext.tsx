@@ -1,8 +1,9 @@
-
 "use client";
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
+// Sửa interface có thêm id:
 interface IUser {
+  id: number;                // <-- BẮT BUỘC phải có
   username: string;
   fullname: string;
   role: string;
@@ -21,7 +22,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
-    
   };
 
   return (
