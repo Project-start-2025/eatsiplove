@@ -6,7 +6,7 @@ const Topbar = () => {
         color: "#333",
         fontWeight: "600",
         textAlign: "center",
-        padding: "6px 0",
+        padding: "0",
         width: "100%",
         boxSizing: "border-box",
       }}
