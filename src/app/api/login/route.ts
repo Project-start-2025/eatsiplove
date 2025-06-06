@@ -1,50 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
-import sql from 'mssql';
-import bcrypt from 'bcryptjs'; 
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
-const config: sql.config = {
-  user: process.env.DB_USER!,
-  password: process.env.DB_PASS!,
-  server: process.env.DB_SERVER!,
-  database: process.env.DB_NAME!,
-  options: {
-    encrypt: true,
-    trustServerCertificate: true,
-  },
-};
+import { getDataSource } from '@/lib/orm';
+import { Account } from '@/model/Account';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
+    // Lưu ý: Nếu frontend gửi qua "email", thì đổi tên biến cho khớp!
 
     if (!email || !password) {
       return NextResponse.json({ message: 'Missing data' }, { status: 400 });
     }
 
-    const pool = await sql.connect(config);
+    const ds = await getDataSource();
+    const accountRepo = ds.getRepository(Account);
 
-    // Giả sử trường là Email
-      const resUser = await pool.request()
-      .input('username', sql.NVarChar, email)  // 'email' biến frontend gửi, thực tế là username
-      .query('SELECT * FROM Accounts WHERE Username = @username');
-
-      if (resUser.recordset.length === 0) {
-        return NextResponse.json({ message: 'User not found' }, { status: 401 });
+    // tìm user theo username (hoặc email nếu entity đặt là username nhận email)
+    const user = await accountRepo.findOneBy({ username:email});
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: 401 });
     }
 
-    const user = resUser.recordset[0];
-    const match = await bcrypt.compare(password, user.PasswordHash);
+    const match = await bcrypt.compare(password, user.passwordHash);
     if (!match) {
       return NextResponse.json({ message: 'Invalid password' }, { status: 401 });
     }
 
+    // Payload JWT
     const payload = {
-      username: user.Username,
-      fullname: user.FullName,
-      role: user.Role,
+      username: user.username,
+      fullname: user.fullName,
+      role: user.role,
     };
 
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
@@ -53,9 +42,9 @@ export async function POST(req: NextRequest) {
       message: 'Login successful',
       token,
       user: {
-        username: user.Username,
-        fullname: user.FullName,
-        role: user.Role,
+        username: user.username,
+        fullname: user.fullName,
+        role: user.role,
       },
     });
   } catch(error) {
