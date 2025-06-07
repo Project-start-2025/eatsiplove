@@ -1,8 +1,17 @@
-import "reflect-metadata";
-import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcrypt";
-import { getDataSource } from "@/lib/orm";
-import { Account } from "@/model/Account";
+import { NextRequest, NextResponse } from 'next/server';
+import sql from 'mssql';
+import bcrypt from 'bcrypt';
+
+const config: sql.config = {
+  user: process.env.DB_USER!,
+  password: process.env.DB_PASS!,
+  server: process.env.DB_SERVER!,
+  database: process.env.DB_NAME!,
+  options: {
+    encrypt: true,
+    trustServerCertificate: true,
+  },
+};
 
 export async function POST(req: NextRequest) {
   try {

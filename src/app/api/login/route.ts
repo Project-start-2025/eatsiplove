@@ -15,12 +15,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Missing data' }, { status: 400 });
     }
 
-    const ds = await getDataSource();
-    const accountRepo = ds.getRepository(Account);
+    const pool = await sql.connect(config);
 
-    // tìm user theo username (hoặc email nếu entity đặt là username nhận email)
-    const user = await accountRepo.findOneBy({ username:email});
-    if (!user) {
+    const resUser = await pool.request()
+      .input('username', sql.NVarChar, email)
+      .query('SELECT * FROM Accounts WHERE Username = @username');
+
+    if (resUser.recordset.length === 0) {
       return NextResponse.json({ message: 'User not found' }, { status: 401 });
     }
 
