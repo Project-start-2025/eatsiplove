@@ -2,5 +2,5 @@
 import { redirect } from "next/navigation";
 
 export default function VendorRootPage() {
-  redirect("/vendor/add-products");
+  redirect("/vendor/Add-Food");
 }
