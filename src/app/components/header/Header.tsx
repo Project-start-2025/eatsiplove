@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaUser, FaSearch, FaShoppingCart } from "react-icons/fa";
 
-
 const Header = () => {
   const [ShowDropDown, setShowDropDown] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
@@ -31,12 +30,12 @@ const Header = () => {
         padding: "10px 30px",
       }}
     >
-     <nav style={{ display: "flex", gap: "20px", fontWeight: "600" }}>
+      <nav style={{ display: "flex", gap: "20px", fontWeight: "600" }}>
         <Link href="/" style={{ color: "#F9C74F" }}>
           Trang chủ
         </Link>
         <div style={{ position: "relative" }}>
-          <Link href="/products" style={{ color: "white" }}>
+          <Link href="/Food" style={{ color: "white" }}>
             Sản phẩm ▼
           </Link>
         </div>
