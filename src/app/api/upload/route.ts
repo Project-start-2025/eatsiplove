@@ -17,20 +17,22 @@ export async function POST(req: NextRequest) {
   // Upload lên Cloudinary
   try {
     const uploadResult = await new Promise<any>((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
-        {
-          folder: "products", // (tùy ý) ảnh sẽ vào thư mục 'products' trên Cloudinary
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      ).end(buffer);
+      cloudinary.uploader
+        .upload_stream(
+          {
+            folder: "Food", // (tùy ý) ảnh sẽ vào thư mục 'Food' trên Cloudinary
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        )
+        .end(buffer);
     });
 
     return NextResponse.json({
-      url: uploadResult.secure_url,     // Link ảnh
-      public_id: uploadResult.public_id // Nên lưu publicId này vào DB
+      url: uploadResult.secure_url, // Link ảnh
+      public_id: uploadResult.public_id, // Nên lưu publicId này vào DB
     });
   } catch (error) {
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
