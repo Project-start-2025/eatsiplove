@@ -27,11 +27,11 @@ const LoginForm = () => {
       });
 
       if (res.ok) {
-        const data = await res.json();  
+        const data = await res.json();
         // Giả sử data.user gồm { username, fullname, role }
         setUser(data.user);
         setMessage("Đăng nhập đúng, chào mừng!");
-        router.push("/vendor/add-products");
+        router.push("/vendor/Add-Food");
       } else if (res.status === 401 || res.status === 403) {
         setMessage("Email hoặc mật khẩu không đúng. Không thể truy cập.");
       } else {
