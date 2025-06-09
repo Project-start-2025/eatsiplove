@@ -1,7 +1,8 @@
 import {Entity,PrimaryGeneratedColumn,Column, CreateDateColumn,ManyToOne, OneToMany, JoinColumn } from "typeorm";
-import { Account } from "./Account";
+import { Restaurant } from "./Restaurant/Restaurant";
+import { Category } from "./Category";
   @Entity()
-  export class Products {
+  export class Food {
     @PrimaryGeneratedColumn()
     id!: number;
     @Column()
@@ -12,15 +13,16 @@ import { Account } from "./Account";
     price!: number;
     @Column({ type: "nvarchar", length: "max", nullable: true })
     images!: string; 
-    @Column({ default: 0 })
-    stock!: number;
-    @Column({ type: "float", default: 0 })
-    averageRating!: number;
     @CreateDateColumn({ type: "datetime2" })
     createdAt!: Date;
-    @ManyToOne(() => Account)
-    @JoinColumn({ name: "userId" })
-    user!: Account;
+
+    @ManyToOne(() => Restaurant) //Một cửa hàng có nhiều món ăn
+    @JoinColumn({ name: "restaurantId" })
+    restaurant!: Restaurant; //Món ăn phải thuộc cửa hàng
+
+    @ManyToOne(() => Category) // Một thể loại có nhiều món ăn
+    @JoinColumn({ name: "categoryId" })
+    category!: Category;
     // @OneToMany(() => Review, review => review.product)
     // reviews!: Review[];
     // @OneToMany(() => OrderOnProduct, o => o.product)

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { getDataSource } from '@/lib/orm';
-import { Account } from '@/model/Account';
+import { Account } from '@/models/BE/Account';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 

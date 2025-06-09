@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Restaurant } from '@/models/Restaurant';
+import { Restaurant } from '@/models/FE/Restaurant';
 
 export default function ListRestaurantForm(){
     const [restaurant, setRestaurant] = useState<Restaurant[]>([]);

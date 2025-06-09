@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sql from 'mssql';
-import { Restaurant } from '@/models/Restaurant';
+import { Restaurant } from '@/models/FE/Restaurant';
 
 const config: sql.config = {
   user: process.env.DB_USER!,
