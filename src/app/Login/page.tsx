@@ -1,22 +1,19 @@
 import LoginForm from "./LoginForm";
 
-const LoginPage = () => {
+export default function LoginPage() {
   return (
-    <div style={pageStyles.page}>
-      <LoginForm />
-    </div>
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background:
+          "linear-gradient(135deg, #F0E6F6 0%, #FFF7E9 100%)", // chuyển từ tím pastel sang vàng pastel nhẹ nhàng
+        padding: "40px 20px",
+      }}
+    >
+       <LoginForm />
+    </main>
   );
-};
-
-const pageStyles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "100vh",
-    backgroundColor: "#F4E2CC",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "20px",
-  },
-};
-
-export default LoginPage;
+}

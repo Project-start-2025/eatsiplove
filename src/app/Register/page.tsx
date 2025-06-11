@@ -1,4 +1,5 @@
 import RegisterForm from "./RegisterForm";
+
 export default function RegisterPage() {
   return (
     <main
@@ -7,7 +8,8 @@ export default function RegisterPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#FFF7E9",
+        background:
+          "linear-gradient(135deg, #F0E6F6 0%, #FFF7E9 100%)", // chuyển từ tím pastel sang vàng pastel nhẹ nhàng
         padding: "40px 20px",
       }}
     >

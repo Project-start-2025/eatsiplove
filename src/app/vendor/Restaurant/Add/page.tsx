@@ -1,7 +1,7 @@
 // src/app/vendor/add-products/page.tsx
 
 import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 
 import AddRestaurantForm from './AddRestaurantForm';
 export default function AddRestaurantPage() {

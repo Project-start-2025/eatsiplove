@@ -1,8 +1,7 @@
-import { Food } from "@/model/Food";
+"use client"
 import { useEffect, useState } from "react";
 import FoodList from "./components/Food/FoodList";
-
-
+import { Food } from "@/models/BE/ Food";
 export default function Home() {
   const [foods, setFoods] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +21,7 @@ export default function Home() {
   return (
     <main>
       <h1>Danh sách món ăn</h1>
-      <FoodList foods={foods} />
+      {/* <FoodList foods={foods} /> */}
     </main>
   );
 }

@@ -1,110 +1,115 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-import styles from "@/styles/styles.LoginForm";
+import FormWrapper from "../components/UI/FormWrapper";
+import Input from "../components/UI/Input";
+import Button from "../components/UI/Button";
+import Link from "next/link";
 import { useUser } from "../Context/UserContext";
 
-const LoginForm = () => {
+export default function LoginForm() {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [message, setMessage] = useState<string | null>(null);
   const { setUser } = useUser();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage(null);
+    setError(null);
     setLoading(true);
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        credentials: "include", // để cookie HttpOnly được gửi tự động
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email, password }),
       });
 
       if (res.ok) {
         const data = await res.json();
-        // Giả sử data.user gồm { username, fullname, role }
+        // Giả sử data = { user: { ... } }
         setUser(data.user);
-        setMessage("Đăng nhập đúng, chào mừng!");
-        router.push("/vendor/Add-Food");
-      } else if (res.status === 401 || res.status === 403) {
-        setMessage("Email hoặc mật khẩu không đúng. Không thể truy cập.");
+        router.push("/profile");
       } else {
-        setMessage("Có lỗi xảy ra. Vui lòng thử lại sau.");
+        const err = await res.json();
+        setError(err.message || "Đăng nhập thất bại");
       }
-    } catch (error) {
-      setMessage("Lỗi kết nối server. Vui lòng thử lại sau.");
+    } catch {
+      setError("Lỗi mạng, vui lòng thử lại");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form} noValidate>
-      <h2 style={styles.title}>Đăng nhập</h2>
+    <FormWrapper title="Đăng nhập">
+      <form onSubmit={handleSubmit}>
+        <Input
+          id="email"
+          label="Email"
+          type="email"
+          placeholder="Nhập email của bạn"
+          value={email}
+          onChange={setEmail}
+          disabled={loading}
+          autoComplete="email"
+        />
+        <Input
+          id="password"
+          label="Mật khẩu"
+          type="password"
+          placeholder="Nhập mật khẩu"
+          value={password}
+          onChange={setPassword}
+          disabled={loading}
+          autoComplete="current-password"
+        />
 
-      <label htmlFor="email" style={styles.label}>
-        Email
-      </label>
-      <input
-        type="email"
-        id="email"
-        required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Nhập email của bạn"
-        style={styles.input}
-        disabled={loading}
-        autoComplete="email"
-      />
+        {message && (
+          <p
+            style={{
+              textAlign: "center",
+              color: message.includes("thành công") ? "green" : "red",
+              fontWeight: 600,
+              marginBottom: 16,
+            }}
+          >
+            {message}
+          </p>
+        )}
 
-      <label htmlFor="password" style={styles.label}>
-        Mật khẩu
-      </label>
-      <input
-        type="password"
-        id="password"
-        required
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Nhập mật khẩu"
-        style={styles.input}
-        disabled={loading}
-        autoComplete="current-password"
-      />
-
-      <div style={styles.footer}>
-        <Link href="/Register" style={styles.registerLink}>
-          Bạn chưa có tài khoản? Đăng ký ngay
-        </Link>
-      </div>
-
-      <button
-        type="submit"
-        style={loading ? styles.buttonLoading : styles.button}
-        disabled={loading}
-      >
-        {loading ? "Đang xử lý..." : "Đăng nhập"}
-      </button>
-
-      {message && (
+        <Button type="submit" loading={loading}>
+          Đăng nhập
+        </Button>
         <p
-          style={
-            message.includes("đăng nhập đúng")
-              ? styles.successMsg
-              : styles.errorMsg
-          }
+          style={{
+            marginTop: 20,
+            fontSize: 14,
+            color: "#666",
+            textAlign: "center",
+            fontFamily: "Arial, sans-serif",
+          }}
         >
-          {message}
+          Bạn chưa có tài khoản?{" "}
+          <Link
+            href="/Register"
+            style={{
+              color: "#FF6F91",
+              fontWeight: 600,
+              textDecoration: "none",
+              cursor: "pointer",
+            }}
+          >
+            Đăng ký ngay
+          </Link>
         </p>
-      )}
-    </form>
+      </form>
+    </FormWrapper>
   );
-};
-
-export default LoginForm;
+}

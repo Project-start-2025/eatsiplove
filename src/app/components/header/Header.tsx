@@ -3,12 +3,12 @@ import { useUser } from "@/app/Context/UserContext";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaUser, FaSearch, FaShoppingCart } from "react-icons/fa";
-
+import { useRouter } from "next/navigation";
 const Header = () => {
   const [ShowDropDown, setShowDropDown] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
   const { user, logout } = useUser();
-
+  const router = useRouter();
   useEffect(() => {
     const handleClickOutSide = (event: MouseEvent) => {
       if (userRef.current && !userRef.current.contains(event.target as Node)) {
@@ -132,25 +132,16 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <div
-                    style={{
-                      fontWeight: "700",
-                      paddingBottom: "8px",
-                      borderBottom: "1px solid #ccc",
-                    }}
-                  >
-                    Xin chào, {user.fullname}
-                  </div>
                   <Link
                     href="/profile"
                     style={{
                       display: "block",
-                      padding: "8px 0",
+                      padding: "6px 0",
                       fontWeight: "600",
                       fontSize: "14px",
                       color: "#333",
                       textDecoration: "none",
-                      textAlign: "left",
+                      textAlign: "center", // sửa từ 'left' sang 'center'
                       cursor: "pointer",
                     }}
                     onClick={() => setShowDropDown(false)}
@@ -158,9 +149,10 @@ const Header = () => {
                     Thông tin cá nhân
                   </Link>
                   <button
-                    onClick={() => {
-                      logout();
+                    onClick={async () => {
+                      await logout();
                       setShowDropDown(false);
+                      router.push("/");
                     }}
                     style={{
                       marginTop: "8px",
