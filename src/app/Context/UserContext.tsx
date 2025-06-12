@@ -9,7 +9,7 @@ import React, {
   useEffect,
 } from "react";
 
-interface IUser {
+interface User {
   id: number;
   username: string;
   fullname: string;
@@ -17,17 +17,17 @@ interface IUser {
   createdAt: string;
 }
 
-interface IUserContext {
-  user: IUser | null;
-  setUser: (user: IUser | null) => void;
+interface UserContext {
+  user: User | null;
+  setUser: (user: User | null) => void;
   logout: () => Promise<void>;
   loading: boolean;
 }
 
-const UserContext = createContext<IUserContext | undefined>(undefined);
+const UserContext = createContext<UserContext | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

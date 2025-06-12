@@ -6,7 +6,7 @@ import Button from "../components/UI/Button";
 import FormWrapper from "../components/UI/FormWrapper";
 import Input from "../components/UI/Input";
 
-interface IUser {
+interface User {
   fullname: string;
   username: string;
   role: string;
@@ -53,7 +53,7 @@ const cardsContainerStyle = {
 
 export default function ProfilePage() {
   const { user, loading } = useUser();
-  const currentUser = user as IUser | null;
+  const currentUser = user as User | null;
 
   const [registering, setRegistering] = useState(false);
   const [showForm, setShowForm] = useState(false);
