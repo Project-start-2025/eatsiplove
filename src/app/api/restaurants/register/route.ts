@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDataSource } from "@/lib/orm";
 import { Restaurant } from "@/models/BE/Restaurant";
-import { getUserById } from "@/lib/user";   // import lại function bạn viết
+import { getUserById } from "@/lib/user";   
 import { getUserFromRequest } from "@/lib/auth";
 
 

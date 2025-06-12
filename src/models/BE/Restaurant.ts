@@ -2,11 +2,12 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from "typeorm";
-import { Account } from "./Account"; // import entity Account tương ứng
+
+import { Account } from "./Account";
 
 @Entity()
 export class Restaurant {
@@ -16,26 +17,19 @@ export class Restaurant {
   @Column()
   name!: string;
 
-  @Column()
-  address!: string;
+  @ManyToOne(() => Account, account => account.restaurants)
+  @JoinColumn({ name: "accountId" })
+  account!: Account;
 
-  @Column()
-  phone!: string;
+  @Column({ nullable: true })
+  openTime?: string;
 
-  @Column({ type: "time" })
-  openTime!: Date;
+  @Column({ nullable: true })
+  closeTime?: string;
 
-  @Column({ type: "time" })
-  closeTime!: Date;
-
-  // Trạng thái nhà hàng có được duyệt bởi admin không
-  @Column({ type: "bit", default: false })
+  @Column({ default: false })
   isApproved!: boolean;
 
-  // Quan hệ nhiều nhà hàng thuộc một tài khoản
-  @ManyToOne(() => Account, (account) => account.restaurants)
-  owner!: Account;
-
-  @CreateDateColumn({ type: "datetime2" })
+  @CreateDateColumn()
   createdAt!: Date;
 }

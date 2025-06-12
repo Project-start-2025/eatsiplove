@@ -2,11 +2,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
   OneToMany,
+  CreateDateColumn,
 } from "typeorm";
-import { Restaurant } from "./Restaurant";
 
+import { Restaurant } from "./Restaurant"; 
 
 @Entity()
 export class Account {
@@ -25,9 +25,9 @@ export class Account {
   @Column({ default: "user" })
   role!: string;
 
-  @CreateDateColumn({ type: "datetime2" })
+  @CreateDateColumn()
   createdAt!: Date;
 
-  @OneToMany(() => Restaurant, (restaurant) => restaurant.owner)
+  @OneToMany(() => Restaurant, restaurant => restaurant.account)
   restaurants!: Restaurant[];
 }

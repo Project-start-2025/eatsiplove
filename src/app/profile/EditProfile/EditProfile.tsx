@@ -3,12 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../Context/UserContext";
+import { User } from "@/types/User";
 
 export default function EditProfile() {
   const router = useRouter(); // Khai báo useRouter
   const { user, setUser } = useUser();
-
-  // Local state để edit
   const [fullname, setFullname] = useState(user?.fullname || "");
   const [username, setUsername] = useState(user?.username || "");
   const [role] = useState(user?.role || "");
@@ -16,7 +15,6 @@ export default function EditProfile() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    // Khi user đổi (ví dụ reload) thì cập nhật lại form
     setFullname(user?.fullname || "");
     setUsername(user?.username || "");
   }, [user]);
@@ -25,14 +23,17 @@ export default function EditProfile() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-
+    const payload = {
+      fullname,
+      username,
+    };
     try {
       const res = await fetch("/api/profile/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ fullname, username }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -42,8 +43,11 @@ export default function EditProfile() {
 
       const data = await res.json();
 
-      // Cập nhật lại user trong context
-      setUser(data.user);
+      const normalizedUser: User = {
+        ...data.user,
+        fullname: data.user.fullName, // map đúng trường
+      };
+      setUser(normalizedUser);
 
       setMessage("Cập nhật thông tin thành công!");
 
@@ -61,7 +65,6 @@ export default function EditProfile() {
       setLoading(false);
     }
   };
-
   if (!user) return <p>Đang tải thông tin...</p>;
 
   return (

@@ -3,7 +3,6 @@ import { getUserFromRequest } from "@/lib/auth"; // đường dẫn tùy project
 import { getUserById } from "@/lib/user";
 import { getDataSource } from "@/lib/orm";
 import { Account } from "@/models/BE/Account";
-
 export async function POST(req: NextRequest) {
   try {
     const userPayload = await getUserFromRequest(req);
@@ -17,19 +16,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Họ và tên không hợp lệ" }, { status: 400 });
     }
 
-    // Lấy user từ DB dựa vào id decoded từ token
     const user = await getUserById(userPayload.id);
     if (!user) {
       return NextResponse.json({ message: "Người dùng không tồn tại" }, { status: 404 });
     }
 
-    // Cập nhật thông tin
-    user.fullName = fullname;
+    user.fullName = fullname.trim();
 
     const dataSource = await getDataSource();
     await dataSource.getRepository(Account).save(user);
 
-    return NextResponse.json({ user });
+    // Trả về dữ liệu đã chuẩn hóa để client dễ xử lý
+    const updatedUserData = {
+      id: user.id,
+      fullName: user.fullName,
+      username: user.username,
+      role: user.role,
+      createdAt: user.createdAt,
+    };
+
+    return NextResponse.json({ user: updatedUserData });
   } catch (error) {
     console.error("Lỗi update profile:", error);
     return NextResponse.json({ message: "Lỗi server" }, { status: 500 });
