@@ -4,5 +4,5 @@ export interface User {
     fullName?: string;  // thêm tùy chọn nếu có trả về
     username: string;
     role: string;
-    createdAt: string;   // ngày tạo tài khoản, kiểu string ISO date
-  }
+    createdAt?: string | null;
+}

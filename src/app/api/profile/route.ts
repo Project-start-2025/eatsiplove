@@ -1,6 +1,7 @@
+// app/api/user/route.ts hoặc pages/api/user.ts tùy setup Next.js version
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { getUserById } from "@/lib/user"; // hoặc đúng path bạn lưu
+import { getUserById } from "@/lib/user";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
@@ -20,18 +21,17 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Chắc chắn trả về createdAt dưới dạng string ISO
     return NextResponse.json({
-        user: {
-          ...user,
-          fullname: user.fullName,  
-          createdAt:
-            user.createdAt instanceof Date
-              ? user.createdAt.toISOString()
-              : user.createdAt,
-        },
-      });
-
-    return NextResponse.json({ user });
+      user: {
+        ...user,
+        fullname: user.fullName,
+        createdAt:
+          user.createdAt instanceof Date
+            ? user.createdAt.toISOString()
+            : user.createdAt || null,
+      },
+    });
   } catch (error) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }

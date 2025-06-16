@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import FoodList from "./components/Food/FoodList";
-import { Food } from "@/models/BE/ Food";
+import { Food } from "@/models/BE/Food";
 export default function Home() {
   const [foods, setFoods] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);

@@ -3,9 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  CreateDateColumn,
+  CreateDateColumn, 
 } from "typeorm";
-
+import { AccountRole } from "./AccountRole";
 import { Restaurant } from "./Restaurant"; 
 
 @Entity()
@@ -22,8 +22,12 @@ export class Account {
   @Column()
   passwordHash!: string;
 
-  @Column({ default: "user" })
-  role!: string;
+  @Column({
+    type: "varchar",
+    length: 20,
+    default: AccountRole.CUSTOMER,
+  })
+  role!: AccountRole;
 
   @CreateDateColumn()
   createdAt!: Date;
@@ -31,3 +35,5 @@ export class Account {
   @OneToMany(() => Restaurant, restaurant => restaurant.account)
   restaurants!: Restaurant[];
 }
+
+export { AccountRole };

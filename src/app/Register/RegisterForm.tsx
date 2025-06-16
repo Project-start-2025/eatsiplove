@@ -11,7 +11,7 @@ const RegisterForm = () => {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("customer");
+  const [role, setRole] = useState("user"); 
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -120,9 +120,9 @@ const RegisterForm = () => {
             onFocus={(e) => (e.currentTarget.style.borderColor = "#4a90e2")}
             onBlur={(e) => (e.currentTarget.style.borderColor = "#ccc")}
           >
-            <option value="customer">Khách hàng</option>
-            <option value="vendor">Quản lý nhà hàng</option>
-            <option value="admin">Admin</option>
+          <option value="customer">Khách hàng</option>      
+              <option value="vendor">Quản lý nhà hàng</option>
+           <option value="admin">Admin</option>
           </select>
         </div>
 

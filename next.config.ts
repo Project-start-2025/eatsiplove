@@ -1,8 +1,14 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import path from 'path';
+import { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   images: {
-    domains: ['res.cloudinary.com'],  // Thay bằng domain cụ thể bạn dùng
+    domains: ['res.cloudinary.com'],
+  },
+  webpack(config) {
+    config.resolve.alias['@'] = path.resolve(__dirname, 'src');
+    return config;
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

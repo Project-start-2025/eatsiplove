@@ -1,10 +1,11 @@
 
-import { Food } from "@/models/BE/ Food";
 
 import { Account } from "@/models/BE/Account";
-import { DataSource } from "typeorm";
-import { Category } from "@/models/BE/ Category";
+import { Category } from "@/models/BE/Category";
+import { Food } from "@/models/BE/Food";
+import { FoodImage } from "@/models/BE/FoodImage";
 import { Restaurant } from "@/models/BE/Restaurant";
+import { DataSource } from "typeorm";
 
 export const AppDataSource = new DataSource({
   type: "mssql",
@@ -13,7 +14,10 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  entities: [Food, Account, Category,Restaurant],
+  entities: [Account, Restaurant, Food, FoodImage, Category],
   synchronize: true,
-  options: { encrypt: true },
+  options: {
+    encrypt: true,
+  },
+  logging: false,
 });

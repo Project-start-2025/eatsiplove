@@ -1,16 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Modal from "react-modal";
 import { useUser } from "../Context/UserContext";
 import Button from "../components/UI/Button";
 import FormWrapper from "../components/UI/FormWrapper";
 import Input from "../components/UI/Input";
+import AddressInput from "../components/Map/AddressInput";
+import MyMapComponent from "../components/Map/Map";
 
 interface User {
   fullname: string;
   username: string;
   role: string;
-  createdAt: string;
+  createdAt: string | null;
 }
 
 const footerStyle = {
@@ -29,7 +32,6 @@ const sectionStyle = {
   borderRadius: 12,
   boxShadow: "0 2px 8px rgb(0 0 0 / 0.1)",
 };
-
 const headingStyle = {
   color: "#4a90e2",
   marginBottom: 24,
@@ -37,13 +39,11 @@ const headingStyle = {
   fontSize: 28,
   fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
 };
-
 const paragraphStyle = {
   marginBottom: 30,
   color: "#555",
   fontSize: 16,
 };
-
 const cardsContainerStyle = {
   display: "flex",
   gap: 20,
@@ -55,9 +55,12 @@ export default function ProfilePage() {
   const { user, loading } = useUser();
   const currentUser = user as User | null;
 
+  const [showMap, setShowMap] = useState(false);
+  const openMapModal = () => setShowMap(true);
+  const closeMapModal = () => setShowMap(false);
+
   const [registering, setRegistering] = useState(false);
   const [showForm, setShowForm] = useState(false);
- 
   const [restaurantName, setRestaurantName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
@@ -66,20 +69,38 @@ export default function ProfilePage() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const createdDate = React.useMemo(() => {
-    if (!currentUser?.createdAt) return null;
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      Modal.setAppElement(document.body); // an toàn hơn #__next
+    }
+  }, []);
 
-    let str = currentUser.createdAt.replace(" ", "T");
-    str = str.replace(/(\.\d{3})\d+/, "$1");
-    const dt = new Date(str);
-    return isNaN(dt.getTime()) ? null : dt;
-  }, [currentUser?.createdAt]);
+  useEffect(() => {
+    console.log("User tải về:", currentUser);
+    console.log("createdAt của user:", currentUser?.createdAt);
+  }, [currentUser]);
+
+  if (loading)
+    return (
+      <p style={{ textAlign: "center", marginTop: 20 }}>
+        Đang tải thông tin người dùng...
+      </p>
+    );
+
+  if (!currentUser)
+    return (
+      <p style={{ textAlign: "center", marginTop: 20, color: "#ff4d4f" }}>
+        Bạn chưa đăng nhập. Vui lòng đăng nhập để xem thông tin cá nhân.
+      </p>
+    );
 
   const hasRequiredInfoForRegister =
     restaurantName.trim() !== "" &&
     address.trim() !== "" &&
-    phone.trim() !== "";
-  openTime.trim() !== "" && closeTime.trim() !== "";
+    phone.trim() !== "" &&
+    openTime.trim() !== "" &&
+    closeTime.trim() !== "";
+
   const handleRegisterClick = () => {
     if (!currentUser) {
       alert("Bạn cần đăng nhập để đăng ký nhà hàng.");
@@ -135,19 +156,10 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading)
-    return (
-      <p style={{ textAlign: "center", marginTop: 20 }}>
-        Đang tải thông tin người dùng...
-      </p>
-    );
-
-  if (!currentUser)
-    return (
-      <p style={{ textAlign: "center", marginTop: 20, color: "#ff4d4f" }}>
-        Bạn chưa đăng nhập. Vui lòng đăng nhập để xem thông tin cá nhân.
-      </p>
-    );
+  const handleSelectPosition = (latLng: { lat: number; lng: number }) => {
+    setAddress(`${latLng.lat.toFixed(6)}, ${latLng.lng.toFixed(6)}`);
+    closeMapModal();
+  };
 
   return (
     <>
@@ -182,12 +194,15 @@ export default function ProfilePage() {
                 </p>
                 <p>
                   <strong>Ngày tạo tài khoản:</strong>{" "}
-                  {createdDate
-                    ? createdDate.toLocaleDateString("vi-VN", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })
+                  {currentUser.createdAt
+                    ? new Date(currentUser.createdAt).toLocaleDateString(
+                        "vi-VN",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }
+                      )
                     : "Không xác định"}
                 </p>
               </>
@@ -219,7 +234,7 @@ export default function ProfilePage() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              zIndex: 9999,
+              zIndex: 1000,
             }}
           >
             <FormWrapper
@@ -230,6 +245,7 @@ export default function ProfilePage() {
                 backgroundColor: "#fff",
                 boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
                 borderRadius: 8,
+                zIndex: 1010,
               }}
             >
               <form
@@ -248,14 +264,14 @@ export default function ProfilePage() {
                     style={{ marginTop: 12 }}
                     disabled={registering}
                   />
-                  <Input
+                  <AddressInput
                     id="address"
                     label="Địa chỉ"
                     value={address}
-                    onChange={(val) => setAddress(val)}
-                    required
-                    style={{ marginTop: 12 }}
+                    onChange={setAddress}
+                    onIconClick={openMapModal}
                     disabled={registering}
+                    style={{ marginTop: 12 }}
                   />
                   <Input
                     id="phone"
@@ -321,6 +337,41 @@ export default function ProfilePage() {
           </div>
         )}
       </footer>
+
+      <Modal
+        isOpen={showMap}
+        onRequestClose={closeMapModal}
+        contentLabel="Chọn vị trí trên bản đồ"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 1100,
+          },
+          content: {
+            maxWidth: "600px",
+            margin: "auto",
+            inset: "40px",
+            borderRadius: 8,
+            padding: 20,
+            zIndex: 1110,
+          },
+        }}
+      >
+        <h2>Chọn vị trí trên bản đồ</h2>
+        {/* Hiển thị bản đồ thật của bạn ở đây, nhớ truyền callback chọn vị trí */}
+        <MyMapComponent
+  onSelectPosition={(latLng) => {
+    handleSelectPosition(latLng);
+    closeMapModal();
+  }}
+/>
+
+        <div style={{ textAlign: "right" }}>
+          <Button onClick={closeMapModal} style={{ backgroundColor: "#999" }}>
+            Hủy
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 }

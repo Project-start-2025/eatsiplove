@@ -1,26 +1,21 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getDataSource } from "@/lib/orm";
 import { Restaurant } from "@/models/BE/Restaurant";
-import { getUserFromRequest } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const user = await getUserFromRequest(req);
-    if (!user || user.role !== "admin") {
-      return NextResponse.json({ message: "Không có quyền truy cập" }, { status: 403 });
-    }
-
     const ds = await getDataSource();
     const restaurantRepo = ds.getRepository(Restaurant);
 
-    const pendingList = await restaurantRepo.find({
+    // Tìm tất cả nhà hàng chưa được duyệt
+    const pendingRestaurants = await restaurantRepo.find({
       where: { isApproved: false },
-      relations: ["account"],
+      relations: ["account"], // nếu cần thông tin user tạo
     });
 
-    return NextResponse.json(pendingList);
+    return NextResponse.json(pendingRestaurants, { status: 200 });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching pending restaurants:", error);
     return NextResponse.json({ message: "Lỗi máy chủ" }, { status: 500 });
   }
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { NextResponse } from "next/server";
 import React, {
   createContext,
   useState,
@@ -14,17 +13,17 @@ interface User {
   username: string;
   fullname: string;
   role: string;
-  createdAt: string;
+  createdAt: string | null;
 }
 
-interface UserContext {
+interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
   loading: boolean;
 }
 
-const UserContext = createContext<UserContext | undefined>(undefined);
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -38,7 +37,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         });
         if (res.ok) {
           const data = await res.json();
-          setUser(data.user || null);
+
+          // Đảm bảo createdAt luôn là string hoặc null
+          const userData = data.user;
+          if (userData && userData.createdAt && !(typeof userData.createdAt === "string")) {
+            userData.createdAt = new Date(userData.createdAt).toISOString();
+          }
+
+          setUser(userData || null);
         } else {
           setUser(null);
         }
@@ -75,10 +81,3 @@ export const useUser = () => {
   if (!context) throw new Error("useUser must be used within UserProvider");
   return context;
 };
-export async function POST() {
-  // Xoá cookie token.jwt bằng cách set lại maxAge=0
-  const response = NextResponse.json({ message: "Logged out" });
-  response.cookies.set("token", "", { path: "/", maxAge: 0 });
-
-  return response;
-}

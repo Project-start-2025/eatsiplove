@@ -6,9 +6,9 @@ import {
   JoinColumn,
   CreateDateColumn,
 } from "typeorm";
-
 import { Account } from "./Account";
-
+import type { Account as AccountType } from "./Account"
+import { RestaurantStatus } from "./RestaurantStatus";
 @Entity()
 export class Restaurant {
   @PrimaryGeneratedColumn()
@@ -17,19 +17,33 @@ export class Restaurant {
   @Column()
   name!: string;
 
-  @ManyToOne(() => Account, account => account.restaurants)
-  @JoinColumn({ name: "accountId" })
-  account!: Account;
+  @Column()
+  address!: string;
 
-  @Column({ nullable: true })
+  @Column()
+  phone!: string;
+
+
+  @Column({ type: "time", nullable: true })
   openTime?: string;
 
-  @Column({ nullable: true })
+  // Giờ đóng cửa, kiểu time
+  @Column({ type: "time", nullable: true })
   closeTime?: string;
 
   @Column({ default: false })
   isApproved!: boolean;
 
+  @ManyToOne(() => Account, account => account.restaurants)
+  @JoinColumn({ name: "accountId" })
+  account!: AccountType;
+
   @CreateDateColumn()
   createdAt!: Date;
+  @Column({
+    type: "varchar",
+    length: 20,
+    default: RestaurantStatus.Pending,
+  })
+  status!: RestaurantStatus;
 }

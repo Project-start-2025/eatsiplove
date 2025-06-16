@@ -17,6 +17,7 @@ export default function EditProfile() {
   useEffect(() => {
     setFullname(user?.fullname || "");
     setUsername(user?.username || "");
+    
   }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {

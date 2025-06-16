@@ -2,31 +2,37 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
   ManyToOne,
   OneToMany,
-  JoinColumn,
 } from "typeorm";
+
+import { FoodImage, type FoodImage as FoodImageType } from "./FoodImage";
 import { Restaurant } from "./Restaurant";
+import { Category } from "./Category";
+
+
 @Entity()
 export class Food {
   @PrimaryGeneratedColumn()
   id!: number;
+
   @Column()
   name!: string;
+
   @Column({ type: "text" })
   description!: string;
+
   @Column({ type: "float" })
   price!: number;
-  @Column({ type: "nvarchar", length: "max", nullable: true })
-  images!: string;
+
   @Column({ default: 0 })
   stock!: number;
-  @Column({ type: "float", default: 0 })
-  averageRating!: number;
-  @CreateDateColumn({ type: "datetime2" })
-  createdAt!: Date;
-  @ManyToOne(() => Restaurant)
-  @JoinColumn({ name: "restaurantId" })
+
+  @OneToMany(() => FoodImage, image => image.food)
+  images!: FoodImageType[];
+  @ManyToOne(() => Category, { nullable: false })
+  category!: Category;
+
+  @ManyToOne(() => Restaurant, { nullable: false })
   restaurant!: Restaurant;
 }

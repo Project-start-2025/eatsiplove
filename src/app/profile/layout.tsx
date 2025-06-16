@@ -1,4 +1,3 @@
-
 import React, { ReactNode } from "react";
 import Link from "next/link";
 import Button from "../components/UI/Button";
