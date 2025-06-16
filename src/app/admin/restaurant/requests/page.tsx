@@ -1,10 +1,11 @@
-import RequestRestaurantForm from "./RequestRestaurantForm";
+import RequestRestaurantList from "./RequestRestaurantList";
+
 
 export default function RequestPage() {
   return (
     <main>
-      <h1>Yêu cầu mở nhà hàng</h1>
-      <RequestRestaurantForm />
+   
+ <RequestRestaurantList/>
     </main>
   );
 }

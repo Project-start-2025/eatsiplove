@@ -3,7 +3,7 @@ import { getDataSource } from "@/lib/orm";
 import { Restaurant } from "@/models/BE/Restaurant";
 import { getUserById } from "@/lib/user";   
 import { getUserFromRequest } from "@/lib/auth";
-
+import { RestaurantStatus } from "@/models/BE/RestaurantStatus";  // Đường dẫn phù hợp
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,7 +18,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Vui lòng điền đầy đủ thông tin" }, { status: 400 });
     }
 
-    // Dùng hàm getUserById bạn đã viết để lấy user
     const user = await getUserById(userToken.id);
     if (!user) {
       return NextResponse.json({ message: "Tài khoản không hợp lệ" }, { status: 401 });
@@ -33,7 +32,7 @@ export async function POST(req: NextRequest) {
       phone,
       openTime,
       closeTime,
-      isApproved: false,
+      status: RestaurantStatus.Pending, 
       account: user,
     });
 
